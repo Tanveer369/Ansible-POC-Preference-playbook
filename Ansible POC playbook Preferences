@@ -1,0 +1,49 @@
+---
+- name: Import and execute preference.xml files
+  hosts: your_host
+  become: yes
+
+  tasks:
+    - name: Find preference.xml files
+      find:
+        paths: /path/to/preferences
+        patterns: preference.xml
+        recurse: yes
+      register: preference_files
+
+    - name: Import and execute preference.xml files
+      shell: "/path/to/command -f {{ item.path }}"
+      loop: "{{ preference_files.files }}"
+
+
+In this playbook, the find module is used to search for files with the name preference.xml in the /path/to/preferences directory and its subdirectories. The results are stored in the preference_files variable.
+
+The shell module is then used in a loop to execute each preference.xml file found by the find module, using the path attribute of each file object in the preference_files.files list.
+
+You can customize the paths and commands used in this playbook to match your specific environment and requirements.
+
+
+Certainly, let me explain the above playbook step by step:
+
+The find module is used to search for files with the name preference.xml in the /path/to/preferences directory and its subdirectories. 
+The paths parameter specifies the directory to search in, the patterns parameter specifies the filename pattern to search for, and the recurse parameter 
+specifies whether to search in subdirectories. The results are stored in the preference_files variable using the register parameter.
+yaml
+Copy code
+- name: Find preference.xml files
+  find:
+    paths: /path/to/preferences
+    patterns: preference.xml
+    recurse: yes
+  register: preference_files
+The shell module is then used in a loop to execute each preference.xml file found by the find module. The loop parameter specifies the list of files 
+to iterate over, which is the preference_files.files attribute of the preference_files variable. The item variable is used to represent each file in the loop. 
+The path attribute of each file object is used as an argument for the command.
+yaml
+Copy code
+- name: Import and execute preference.xml files
+  shell: "/path/to/command -f {{ item.path }}"
+  loop: "{{ preference_files.files }}"
+This playbook is a simple example of how you can use the find and shell modules in Ansible to search for and execute multiple files dynamically, without 
+explicitly specifying their names in the playbook. You can customize the paths and commands used in this playbook to match your specific environment and 
+requirements.
